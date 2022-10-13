@@ -21,10 +21,44 @@ function reducer(state, { type, payload }) {
         ...state,
         currentOperand: `${state.currentOperand || ""}${payload.digit}`,
       };
+      case ACTIONS.CHOOSE_OPERATION:
+        if(state.currentOperand == null){
+          return state
+        }
+        if(state.previousOperand == null){
+          return {
+            ...state,
+            operation: payload.operation,
+            previousOperand: state.currentOperand,
+            currentOperand: null,
+          }
+        }
+        return{
+          ...state,
+          previousOperand: evaluate(state),
+          operation: payload.operation,
+          customElements: null
+        }
   case ACTIONS.CLEAR:
     return {}
   }
 }
+
+function evaluate({currentOperand, previousOperand, operation}){
+  const prev = parseFloat(previousOperand);
+  const current = parseFloat(currentOperand);
+  if(isNaN(prev) || isNaN(current))return "";
+  let computation = "";
+  switch(operation){
+    case "+":
+      computation = prev + current;
+      break;
+    case "-":
+      computation = prev - current;
+      break;
+  }
+}
+
 function App() {
   const [{currentOperand, previousOperand, operation}, dispatch] = useReducer(reducer, {})
 
