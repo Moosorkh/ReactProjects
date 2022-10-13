@@ -22,7 +22,7 @@ function reducer(state, { type, payload }) {
         currentOperand: `${state.currentOperand || ""}${payload.digit}`,
       };
       case ACTIONS.CHOOSE_OPERATION:
-        if(state.currentOperand == null){
+        if(state.currentOperand == null & state.previousOperand == null){
           return state
         }
         if(state.previousOperand == null){
@@ -56,7 +56,13 @@ function evaluate({currentOperand, previousOperand, operation}){
     case "-":
       computation = prev - current;
       break;
+    case "*":
+      computation = prev * current;
+      break;
+    case "÷":
+      computation = prev / current;
   }
+  return computation.toString();
 }
 
 function App() {
